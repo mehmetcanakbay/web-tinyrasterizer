@@ -1,112 +1,66 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
 import type { DocumentHead } from "@builder.io/qwik-city";
-
-import Counter from "../components/starter/counter/counter";
-import Hero from "../components/starter/hero/hero";
-import Infobox from "../components/starter/infobox/infobox";
-import Starter from "../components/starter/next-steps/next-steps";
+import { render } from '~/lib/rasterizer/mainRasterizer';
+import { parseOBJ } from '~/lib/rasterizer/objParser';
 
 export default component$(() => {
-  return (
-    <>
-      <Hero />
-      <Starter />
+    const inputFileElement = useSignal<HTMLInputElement>();
+    const canvasRef = useSignal<HTMLCanvasElement>();
 
-      <div role="presentation" class="ellipsis"></div>
-      <div role="presentation" class="ellipsis ellipsis-purple"></div>
+    useVisibleTask$(() => {
+        const canvas = canvasRef.value;
+        if (!canvas) return;
 
-      <div class="container container-center container-spacing-xl">
-        <h3>
-          You can <span class="highlight">count</span>
-          <br /> on me
-        </h3>
-        <Counter />
-      </div>
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
 
-      <div class="container container-flex">
-        <Infobox>
-          <div q:slot="title" class="icon icon-cli">
-            CLI Commands
-          </div>
-          <>
-            <p>
-              <code>npm run dev</code>
-              <br />
-              Starts the development server and watches for changes
-            </p>
-            <p>
-              <code>npm run preview</code>
-              <br />
-              Creates production build and starts a server to preview it
-            </p>
-            <p>
-              <code>npm run build</code>
-              <br />
-              Creates production build
-            </p>
-            <p>
-              <code>npm run qwik add</code>
-              <br />
-              Runs the qwik CLI to add integrations
-            </p>
-          </>
-        </Infobox>
+        const input = inputFileElement.value;
+        if (!input) return;
 
-        <div>
-          <Infobox>
-            <div q:slot="title" class="icon icon-apps">
-              Example Apps
-            </div>
-            <p>
-              Have a look at the <a href="/demo/flower">Flower App</a> or the{" "}
-              <a href="/demo/todolist">Todo App</a>.
-            </p>
-          </Infobox>
+        const handleChange = async (e: Event) => {
+            const target = e.target as HTMLInputElement;
+            if (!target.files?.length) return;
 
-          <Infobox>
-            <div q:slot="title" class="icon icon-community">
-              Community
-            </div>
-            <ul>
-              <li>
-                <span>Questions or just want to say hi? </span>
-                <a href="https://qwik.dev/chat" target="_blank">
-                  Chat on discord!
-                </a>
-              </li>
-              <li>
-                <span>Follow </span>
-                <a href="https://twitter.com/QwikDev" target="_blank">
-                  @QwikDev
-                </a>
-                <span> on Twitter</span>
-              </li>
-              <li>
-                <span>Open issues and contribute on </span>
-                <a href="https://github.com/QwikDev/qwik" target="_blank">
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <span>Watch </span>
-                <a href="https://qwik.dev/media/" target="_blank">
-                  Presentations, Podcasts, Videos, etc.
-                </a>
-              </li>
-            </ul>
-          </Infobox>
-        </div>
-      </div>
-    </>
-  );
+            const fileData = target.files[0];
+            const fileText = await fileData.text();
+
+            const parsedObj = parseOBJ(fileText);
+            render(ctx, parsedObj);
+        };
+
+        input.addEventListener('change', handleChange);
+
+        return () => {
+            input.removeEventListener('change', handleChange);
+        };
+    });
+
+    return (
+        <>
+            <input
+                type="file"
+                accept=".obj"
+                class="px-4 bg-red-400"
+                ref={inputFileElement}
+            />
+
+            <canvas
+                width={800}
+                height={800}
+                ref={canvasRef}
+            />
+        </>
+    );
+    1
 });
 
+
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
-  meta: [
-    {
-      name: "description",
-      content: "Qwik site description",
-    },
-  ],
+    title: "Welcome to Qwik",
+    meta: [
+        {
+            name: "description",
+            content: "Qwik site description",
+        },
+    ],
 };
