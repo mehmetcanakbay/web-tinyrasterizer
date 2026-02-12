@@ -1,7 +1,13 @@
 import { $, component$, useContext, useOnWindow } from "@builder.io/qwik";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import Vivus from "vivus";
 import ModelContext from "~/context/file-context";
-export default component$(() => {
+
+interface HeaderProps {
+    bunny: string;
+}
+
+export default component$((props: HeaderProps) => {
     useOnWindow("load", $(() => {
         const myvivus = new Vivus(
             "logo-svg-div",
@@ -17,15 +23,20 @@ export default component$(() => {
         myvivus.stop().reset().play(2);
     }));
 
-
     const modelStore = useContext(ModelContext);
+
+    const sendTextData = $(async (text: string) => {
+        modelStore.fileText = text;
+    })
+
     const handleChange$ = $(async (e: Event) => {
         const input = e.target as HTMLInputElement;
         if (!input.files?.length) return;
 
         const text = await input.files[0].text();
-        modelStore.fileText = text;
+        sendTextData(text);
     });
+
 
     return (
         <header class="h-20 p-2">
@@ -34,7 +45,7 @@ export default component$(() => {
                     <div id="logo-svg-div"></div>
                 </div>
 
-                <div class="-mt-12">
+                <div class="-mt-12 flex flex-row">
                     <label
                         class="inline-block cursor-pointer rounded-lg bg-[#5C382C] py-3 px-6 mr-4 text-gray-100 
                     font-semibold shadow-md transition hover:bg-[#825344] active:scale-90">
@@ -46,7 +57,15 @@ export default component$(() => {
                             onChange$={handleChange$}
                         />
                     </label>
+
+                    <label
+                        onClick$={$(() => sendTextData(props.bunny))}
+                        class="inline-block cursor-pointer rounded-lg bg-[#5C382C] py-3 px-6 mr-4 text-gray-100 
+                    font-semibold shadow-md transition hover:bg-[#825344] active:scale-90">
+                        Render bunny
+                    </label>
                 </div>
+
             </div>
         </header>
     );

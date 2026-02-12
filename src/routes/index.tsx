@@ -23,10 +23,10 @@ export default component$(() => {
     });
 
     return (
-        <div class="flex flex-col w-full h-[80vh]">
-            <div class="flex-1 flex h-full w-full">
+        <div class="flex flex-col w-full h-[80vh] items-center">
+            <div class="flex-1 flex flex-row h-full w-full justify-center">
                 <canvas
-                    class="h-full aspect-square"
+                    class="h-full aspect-square rounded-lg justify-center"
                     ref={canvasRef}
                 />
             </div>

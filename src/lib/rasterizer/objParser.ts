@@ -6,6 +6,41 @@ interface Face {
     normals?: Vector3[];
 }
 
+function computeVertexNormals(vertices: Vector3[], faces: Face[]) {
+    // Initialize normals array with zero vectors
+    const vertexNormals: Vector3[] = vertices.map(() => new Vector3(0, 0, 0));
+
+    for (const face of faces) {
+        if (face.vertices.length < 3) continue;
+
+        const v0 = face.vertices[0];
+        const v1 = face.vertices[1];
+        const v2 = face.vertices[2];
+
+        // Compute face normal
+        const edge1 = v1.sub(v0);
+        const edge2 = v2.sub(v0);
+        const faceNormal = edge1.cross(edge2).normalize();
+
+        // Add face normal to each vertex normal
+        for (let i = 0; i < face.vertices.length; i++) {
+            const idx = vertices.indexOf(face.vertices[i]);
+            vertexNormals[idx].add(faceNormal);
+        }
+    }
+
+    // Normalize all vertex normals
+    for (const n of vertexNormals) n.normalize();
+
+    // Assign normals to faces
+    for (const face of faces) {
+        face.normals = face.vertices.map(v => {
+            const idx = vertices.indexOf(v);
+            return vertexNormals[idx];
+        });
+    }
+}
+
 export function parseOBJ(data: string): ObjModel {
     const vertices: Vector3[] = [];
     const texCoords: Vector2[] = [];
@@ -77,6 +112,10 @@ export function parseOBJ(data: string): ObjModel {
                 break;
             }
         }
+    }
+
+    if (normals.length === 0) {
+        computeVertexNormals(vertices, faces);
     }
 
     return new ObjModel(vertices, texCoords, normals, faces);
