@@ -17,6 +17,7 @@ export default component$(() => {
         myvivus.stop().reset().play(2);
     }));
 
+
     const modelStore = useContext(ModelContext);
     const handleChange$ = $(async (e: Event) => {
         const input = e.target as HTMLInputElement;
