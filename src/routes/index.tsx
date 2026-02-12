@@ -1,4 +1,4 @@
-import { component$, useContext, useSignal, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, useContext, useSignal, useTask$ } from '@builder.io/qwik';
 import type { DocumentHead } from "@builder.io/qwik-city";
 import ModelContext from '~/context/file-context';
 import { render } from '~/lib/rasterizer/mainRasterizer';

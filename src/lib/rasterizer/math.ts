@@ -253,10 +253,6 @@ export class VectorMath {
         )
     }
 
-    public static length(vector: Vector3): number {
-        return Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
-    }
-
     public static lengthvec4(vector: Vector4): number {
         return Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z + vector.w * vector.w);
     }

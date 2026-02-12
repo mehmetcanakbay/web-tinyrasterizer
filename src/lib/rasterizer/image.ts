@@ -11,7 +11,7 @@ export class CTXImageManager {
         this.settings.ctx = data.ctx;
     }
 
-    createImageFromContext(width: number, height: number): ImageData {
+    createImageFromContext(width: number, height: number): (ImageData | undefined) {
         if (!this.settings.ctx) {
             console.error("CTXImage > CTX is null ")
             return;

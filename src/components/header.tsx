@@ -1,8 +1,8 @@
-import { $, component$, useContext, useTask$, useVisibleTask$ } from "@builder.io/qwik";
+import { $, component$, useContext, useOnWindow } from "@builder.io/qwik";
 import Vivus from "vivus";
 import ModelContext from "~/context/file-context";
 export default component$(() => {
-    useVisibleTask$(() => {
+    useOnWindow("load", $(() => {
         const myvivus = new Vivus(
             "logo-svg-div",
             {
@@ -15,7 +15,7 @@ export default component$(() => {
             () => { },
         );
         myvivus.stop().reset().play(2);
-    });
+    }));
 
     const modelStore = useContext(ModelContext);
     const handleChange$ = $(async (e: Event) => {

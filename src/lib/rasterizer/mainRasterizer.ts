@@ -21,12 +21,11 @@ export function render(ctx: CanvasRenderingContext2D, modelToRender: ObjModel,
     const viewport = TransformationsMath.viewport(0, 0, width, height);
     const projection: Matrix4x4 = TransformationsMath.projectionFOV(20, 1, 0.1, 100);
 
-    console.log("Eye distance:", VectorMath.length(VectorMath.sub(eye, center)));
     console.log("Projection matrix:", projection);
     const ctxImageManager = new CTXImageManager({ ctx })
     const framebuffer = ctxImageManager.createImageFromContext(width, height);
 
-    const data = framebuffer.data;
+    const data = framebuffer!.data;
 
     const shader = new PhongShader(modelToRender, view, lightDir, projection);
     initZBuffer(width, height)
@@ -48,5 +47,5 @@ export function render(ctx: CanvasRenderingContext2D, modelToRender: ObjModel,
         rasterize({ viewport }, clip, shader, data, width, height);
     }
 
-    ctx.putImageData(framebuffer, 0, 0);
+    ctx.putImageData(framebuffer!, 0, 0);
 }
