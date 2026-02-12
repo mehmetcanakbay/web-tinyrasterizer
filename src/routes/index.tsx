@@ -1,66 +1,45 @@
-import { component$, useSignal, useVisibleTask$ } from '@builder.io/qwik';
+import { component$, useContext, useSignal, useTask$, useVisibleTask$ } from '@builder.io/qwik';
 import type { DocumentHead } from "@builder.io/qwik-city";
+import ModelContext from '~/context/file-context';
 import { render } from '~/lib/rasterizer/mainRasterizer';
 import { parseOBJ } from '~/lib/rasterizer/objParser';
 
 export default component$(() => {
-    const inputFileElement = useSignal<HTMLInputElement>();
     const canvasRef = useSignal<HTMLCanvasElement>();
+    const modelStore = useContext(ModelContext);
 
-    useVisibleTask$(() => {
+    useTask$(({ track }) => {
+        track(() => modelStore.fileText);
+
+        if (!modelStore.fileText) return;
         const canvas = canvasRef.value;
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        const input = inputFileElement.value;
-        if (!input) return;
-
-        const handleChange = async (e: Event) => {
-            const target = e.target as HTMLInputElement;
-            if (!target.files?.length) return;
-
-            const fileData = target.files[0];
-            const fileText = await fileData.text();
-
-            const parsedObj = parseOBJ(fileText);
-            render(ctx, parsedObj);
-        };
-
-        input.addEventListener('change', handleChange);
-
-        return () => {
-            input.removeEventListener('change', handleChange);
-        };
+        const parsedObj = parseOBJ(modelStore.fileText);
+        render(ctx, parsedObj, canvasRef?.value?.width, canvasRef.value?.height);
     });
 
     return (
-        <>
-            <input
-                type="file"
-                accept=".obj"
-                class="px-4 bg-red-400"
-                ref={inputFileElement}
-            />
-
-            <canvas
-                width={800}
-                height={800}
-                ref={canvasRef}
-            />
-        </>
+        <div class="flex flex-col w-full h-[80vh]">
+            <div class="flex-1 flex h-full w-full">
+                <canvas
+                    class="h-full aspect-square"
+                    ref={canvasRef}
+                />
+            </div>
+        </div>
     );
-    1
 });
 
-
 export const head: DocumentHead = {
-    title: "Welcome to Qwik",
+    title: "Web Tiny Rasterizer",
     meta: [
         {
             name: "description",
-            content: "Qwik site description",
+            content: "Web port of Tiny Rasterizer",
         },
     ],
 };

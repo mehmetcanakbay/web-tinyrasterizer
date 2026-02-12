@@ -4,9 +4,11 @@ import { type ObjModel } from "./objParser";
 import { initZBuffer, rasterize } from "./rasterize";
 import { PhongShader } from "./shader";
 
-export function render(ctx: CanvasRenderingContext2D, modelToRender: ObjModel) {
-    const width = 800;
-    const height = 800;
+export function render(ctx: CanvasRenderingContext2D, modelToRender: ObjModel,
+    width?: number, height?: number) {
+
+    width = width || 800;
+    height = height || 800;
 
     const lightDir: Vector3 = new Vector3(1, 1, 1)
     let eye: Vector3 = new Vector3(5, 0, -5)
@@ -30,9 +32,9 @@ export function render(ctx: CanvasRenderingContext2D, modelToRender: ObjModel) {
     initZBuffer(width, height)
 
     for (let i = 0; i < data.length; i += 4) {
-        data[i] = 255;
-        data[i + 1] = 0;
-        data[i + 2] = 0;
+        data[i] = 22;
+        data[i + 1] = 22;
+        data[i + 2] = 22;
         data[i + 3] = 255;
     }
 
