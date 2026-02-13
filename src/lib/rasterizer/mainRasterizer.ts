@@ -1,5 +1,5 @@
 import { CTXImageManager } from "./image";
-import { Matrix4x4, TransformationsMath, Vector3, Vector4, VectorMath } from "./math"
+import { Matrix, Transformations, Vector3 } from "./math"
 import { type ObjModel } from "./objParser";
 import { initZBuffer, rasterize } from "./rasterize";
 import { PhongShader } from "./shader";
@@ -15,11 +15,9 @@ export function render(ctx: CanvasRenderingContext2D, modelToRender: ObjModel,
     const center: Vector3 = new Vector3(0, 0, 0)
     const up: Vector3 = new Vector3(0, 1, 0)
 
-    eye = VectorMath.mulScalar3(eye, 1)
-
-    const view: Matrix4x4 = TransformationsMath.lookAt(eye, center, up);
-    const viewport = TransformationsMath.viewport(0, 0, width, height);
-    const projection: Matrix4x4 = TransformationsMath.projectionFOV(20, 1, 0.1, 100);
+    const view: Matrix = Transformations.lookAt(eye, center, up);
+    const viewport = Transformations.viewport(0, 0, width, height);
+    const projection: Matrix = Transformations.perspective(20, 1, 0.1, 100);
 
     console.log("Projection matrix:", projection);
     const ctxImageManager = new CTXImageManager({ ctx })

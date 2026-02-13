@@ -1,4 +1,4 @@
-import { Matrix, Matrix4x4, Vector2, Vector3, Vector4, VectorMath } from "./math";
+import { Matrix, Vector2, Vector3, Vector4 } from "./math";
 import type { Shader } from "./shader";
 
 let zbuffer: Float32Array;
@@ -9,7 +9,7 @@ export function initZBuffer(width: number, height: number) {
 }
 
 export function rasterize(
-    matrixData: { viewport: Matrix4x4 },
+    matrixData: { viewport: Matrix },
     clip: Vector4[],
     shader: Shader,
     framebuffer: Uint8ClampedArray,
@@ -17,21 +17,22 @@ export function rasterize(
     height: number
 ) {
     const ndc = [
-        VectorMath.divScalar(clip[0], clip[0].w),
-        VectorMath.divScalar(clip[1], clip[1].w),
-        VectorMath.divScalar(clip[2], clip[2].w)
+        clip[0].scale(1 / clip[0].w),
+        clip[1].scale(1 / clip[1].w),
+        clip[2].scale(1 / clip[2].w)
     ];
 
     const screen = ndc.map(v => {
-        const m = Matrix4x4.multiplyWithMatrix(matrixData.viewport, v);
+        const m = matrixData.viewport.multiplyVector4(v);
         return new Vector2(m.x, m.y);
     });
 
     const ABC = Matrix.fromRows(
-        [screen[0].x, screen[0].y, 1.0],
-        [screen[1].x, screen[1].y, 1.0],
-        [screen[2].x, screen[2].y, 1.0]
+        [screen[0].x, screen[1].x, screen[2].x],
+        [screen[0].y, screen[1].y, screen[2].y],
+        [1.0, 1.0, 1.0]
     );
+
     const det = ABC.det();
 
     if (det < 1e-4) return;

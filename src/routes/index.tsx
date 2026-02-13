@@ -27,6 +27,8 @@ export default component$(() => {
             <div class="flex-1 flex flex-row h-full w-full justify-center">
                 <canvas
                     class="h-full aspect-square rounded-lg justify-center"
+                    width={800}
+                    height={800}
                     ref={canvasRef}
                 />
             </div>
