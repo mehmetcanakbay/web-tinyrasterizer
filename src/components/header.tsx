@@ -1,5 +1,4 @@
 import { $, component$, useContext, useOnWindow } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
 import Vivus from "vivus";
 import ModelContext from "~/context/file-context";
 
