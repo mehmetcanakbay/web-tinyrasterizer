@@ -38,15 +38,15 @@ export default component$((props: HeaderProps) => {
 
 
     return (
-        <header class="h-20 p-2">
+        <header class="h-20 p-4">
             <div class="flex flex-row items-center align-middle justify-between">
-                <div class="scale-100 -mt-12 p-4">
+                <div class="scale-500 p-4">
                     <div id="logo-svg-div"></div>
                 </div>
 
-                <div class="-mt-12 flex flex-row">
+                <div class="flex flex-row gap-4">
                     <label
-                        class="inline-block cursor-pointer rounded-lg bg-[#5C382C] py-3 px-6 mr-4 text-gray-100 
+                        class="inline-block cursor-pointer rounded-lg bg-[#5C382C] py-3 px-6  text-gray-100 
                     font-semibold shadow-md transition hover:bg-[#825344] active:scale-90">
                         Upload .obj
                         <input
@@ -59,7 +59,7 @@ export default component$((props: HeaderProps) => {
 
                     <label
                         onClick$={$(() => sendTextData(props.bunny))}
-                        class="inline-block cursor-pointer rounded-lg bg-[#5C382C] py-3 px-6 mr-4 text-gray-100 
+                        class="inline-block cursor-pointer rounded-lg bg-[#5C382C] py-3 px-6  text-gray-100 
                     font-semibold shadow-md transition hover:bg-[#825344] active:scale-90">
                         Render bunny
                     </label>
