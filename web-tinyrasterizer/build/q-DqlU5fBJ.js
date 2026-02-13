@@ -1,0 +1,1 @@
+import{R as e,Q as r}from"./q-DznW5W-K.js";import{A as n,I as l}from"./q-BJpgaTHZ.js";const s=()=>n(r,{children:[l("head",null,null,[l("meta",null,{charset:"utf-8"},null,3,null),l("link",null,{rel:"manifest",href:"/web-tinyrasterizer/manifest.json"},null,3,"35_0")],3,null),l("body",null,{lang:"en"},n(e,null,3,"35_1"),1,null)]},1,"35_2");export{s as s_3sccYCDd1Z0};

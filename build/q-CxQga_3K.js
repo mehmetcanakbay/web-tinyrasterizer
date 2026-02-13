@@ -1,0 +1,1 @@
+import{_ as s}from"./q-BKZ00VYc.js";import{J as r}from"./q-BupLSM7n.js";import{m as t,U as a,L as e}from"./q-DE6ZxTZH.js";const L=r(a("s_dDiBubs3LHc")),d=t(e(()=>s(()=>import("./q-DVxQ8HLc.js").then(o=>o.l),[]),"s_VkLNXphUh5s"));export{d as default,L as useTextLoader};
