@@ -6,13 +6,14 @@ This repo is part of a bigger project I decided not to finish. This is simply it
 
 Improvements to be considered:
 
-- Default bunny can be rendered but because model matrix is the default one for a blender sphere, it looks small. Need to let user change up the model matrix
-
+- Let user change up the model matrix
+### Stanford bunny example
+![bunny](resources/bunny.png)
 
 ## Usage
 
 ```shell
-bun run install
+bun install
 ````
 
 To start up the project:
