@@ -1,0 +1,1 @@
+import{_ as e}from"./q-DSS0M8_-.js";import{m as t,L as o}from"./q-BGfuL-UC.js";const a=t(o(()=>e(()=>import("./q-DWKSf4cs.js"),[]),"s_xYL1qOwPyDI")),s={title:"Web Tiny Rasterizer",meta:[{name:"description",content:"Web port of Tiny Rasterizer"}]};export{a as default,s as head};
