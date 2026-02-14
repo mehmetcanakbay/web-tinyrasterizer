@@ -51,7 +51,8 @@ export function rasterize(
     for (let x = Math.max(Math.floor(bbminx), 0); x <= Math.min(Math.floor(bbmaxx), width - 1); x++) {
         for (let y = Math.max(Math.floor(bbminy), 0); y <= Math.min(Math.floor(bbmaxy), height - 1); y++) {
             const bc_screen = ABC_inv!.multiplyVector3(new Vector3(x, y, 1.0));
-            if (bc_screen.x < 0 || bc_screen.y < 0 || bc_screen.z < 0) continue;
+            const eps = -1e-5;
+            if (bc_screen.x < eps || bc_screen.y < eps || bc_screen.z < eps) continue;
 
             const bc_clip = new Vector3(
                 bc_screen.x / clip[0].w,

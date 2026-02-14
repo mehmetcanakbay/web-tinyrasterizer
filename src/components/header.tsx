@@ -12,7 +12,7 @@ export default component$((props: HeaderProps) => {
             "logo-svg-div",
             {
                 duration: 100,
-                file: "/logo.svg",
+                file: "/web-tinyrasterizer/logo.svg",
                 type: "oneByOne",
                 delay: 50,
                 animTimingFunction: Vivus.LINEAR,
@@ -39,9 +39,10 @@ export default component$((props: HeaderProps) => {
 
     return (
         <header class="h-20 p-4">
-            <div class="flex flex-row items-center align-middle justify-between">
-                <div class="scale-500 p-4">
-                    <div id="logo-svg-div"></div>
+            <div class="flex flex-row items-center align-middle justify-between -mt-12">
+                <div class="">
+                    <div id="logo-svg-div">
+                    </div>
                 </div>
 
                 <div class="flex flex-row gap-4">

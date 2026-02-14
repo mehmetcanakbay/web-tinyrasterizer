@@ -6,36 +6,30 @@ interface Face {
     vn?: number[];    // normal indices
 }
 
-function computeVertexNormals(
-    vertices: Vector3[],
-    faces: Face[]
-): Vector3[] {
-
-    const vertexNormals: Vector3[] =
-        vertices.map(() => new Vector3(0, 0, 0));
+function computeVertexNormals(vertices: Vector3[], faces: Face[]): Vector3[] {
+    const normals: Vector3[] = Array.from(
+        { length: vertices.length },
+        () => new Vector3(0, 0, 0)
+    );
 
     for (const face of faces) {
-        const [i0, i1, i2] = face.v;
-
-        const v0 = vertices[i0];
-        const v1 = vertices[i1];
-        const v2 = vertices[i2];
+        const v0 = vertices[face.v[0]];
+        const v1 = vertices[face.v[1]];
+        const v2 = vertices[face.v[2]];
 
         const edge1 = v1.sub(v0);
         const edge2 = v2.sub(v0);
+        const faceNormal = edge1.cross(edge2);
 
-        const normal = edge1.cross(edge2).normalize();
-
-        vertexNormals[i0].add(normal);
-        vertexNormals[i1].add(normal);
-        vertexNormals[i2].add(normal);
+        for (const vi of face.v) {
+            normals[vi] = normals[vi].add(faceNormal);
+        }
     }
 
-    for (const n of vertexNormals) {
-        n.normalize();
-    }
-
-    return vertexNormals;
+    return normals.map(n => {
+        const len = Math.hypot(n.x, n.y, n.z);
+        return new Vector3(n.x / len, n.y / len, n.z / len);
+    });
 }
 
 export function parseOBJ(data: string): ObjModel {
@@ -107,7 +101,6 @@ export function parseOBJ(data: string): ObjModel {
 
                 if (v.length < 3) break;
 
-                // Triangulate polygon using fan method
                 for (let i = 1; i < v.length - 1; i++) {
                     faces.push({
                         v: [v[0], v[i], v[i + 1]],
@@ -121,16 +114,43 @@ export function parseOBJ(data: string): ObjModel {
         }
     }
 
-    // If OBJ didn't provide normals, compute smooth vertex normals
     if (normals.length === 0) {
         const computed = computeVertexNormals(vertices, faces);
         normals.push(...computed);
 
-        // Assign normal indices to faces
         for (const face of faces) {
             face.vn = [...face.v];
         }
     }
+
+    let min = new Vector3(Infinity, Infinity, Infinity);
+    let max = new Vector3(-Infinity, -Infinity, -Infinity);
+
+    for (const v of vertices) {
+        min = new Vector3(
+            Math.min(min.x, v.x),
+            Math.min(min.y, v.y),
+            Math.min(min.z, v.z)
+        );
+
+        max = new Vector3(
+            Math.max(max.x, v.x),
+            Math.max(max.y, v.y),
+            Math.max(max.z, v.z)
+        );
+    }
+
+    const center = min.add(max).scale(0.5);
+    const size = max.sub(min);
+    const maxExtent = Math.max(size.x, size.y, size.z);
+    const scale = maxExtent > 0 ? 1.0 / maxExtent : 1.0;
+
+    for (let i = 0; i < vertices.length; i++) {
+        vertices[i] = vertices[i]
+            .sub(center)
+            .scale(scale);
+    }
+
 
     return new ObjModel(vertices, texCoords, normals, faces);
 }

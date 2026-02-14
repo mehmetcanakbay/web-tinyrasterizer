@@ -327,4 +327,74 @@ export class Transformations {
             [0, 0, 0, 1]
         );
     }
+
+    static translate(vec: Vector3) {
+        return Matrix.fromRows(
+            [1.0, 0.0, 0.0, vec.x],
+            [0.0, 1.0, 0.0, vec.y],
+            [0.0, 0.0, 1.0, vec.z],
+            [0.0, 0.0, 0.0, 1.0],
+        )
+    }
+    static scale(vec: Vector3) {
+        return Matrix.fromRows(
+            [vec.x, 0.0, 0.0, 0],
+            [0.0, vec.y, 0.0, 0],
+            [0.0, 0.0, vec.z, 0],
+            [0.0, 0.0, 0.0, 1.0],
+        )
+    }
+
+    static rotateX(angle: number): Matrix {
+        const c = Math.cos(angle);
+        const s = Math.sin(angle);
+
+        return Matrix.fromRows(
+            [1, 0, 0, 0],
+            [0, c, -s, 0],
+            [0, s, c, 0],
+            [0, 0, 0, 1]
+        );
+    }
+
+    static rotateY(angle: number): Matrix {
+        const c = Math.cos(angle);
+        const s = Math.sin(angle);
+
+        return Matrix.fromRows(
+            [c, 0, s, 0],
+            [0, 1, 0, 0],
+            [-s, 0, c, 0],
+            [0, 0, 0, 1]
+        );
+    }
+
+    static rotateZ(angle: number): Matrix {
+        const c = Math.cos(angle);
+        const s = Math.sin(angle);
+
+        return Matrix.fromRows(
+            [c, -s, 0, 0],
+            [s, c, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1]
+        );
+    }
+
+    static rotateXYZ(rx: number, ry: number, rz: number): Matrix {
+        const Rx = this.rotateX(rx);
+        const Ry = this.rotateY(ry);
+        const Rz = this.rotateZ(rz);
+
+        return Rz.multiply(Ry).multiply(Rx);
+    }
+
+    static TRS(position: Vector3, rotation: Vector3, scale: Vector3): Matrix {
+        const T = this.translate(position);
+        const R = this.rotateXYZ(rotation.x, rotation.y, rotation.z);
+        const S = this.scale(scale);
+
+        return T.multiply(R).multiply(S);
+    }
+
 }

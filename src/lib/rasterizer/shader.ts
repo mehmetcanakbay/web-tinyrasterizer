@@ -18,16 +18,18 @@ export class PhongShader extends Shader {
     model: ObjModel;
     modelViewMatrix: Matrix;
     projectionMatrix: Matrix;
+    viewMatrix: Matrix;
     lightDirection: Vector4;
     vertexToFragmentData!: varyingData;
     normalMatrix: Matrix;
 
-    constructor(model: ObjModel, modelViewMatrix: Matrix, lightDir: Vector3, projectionMatrix: Matrix) {
+    constructor(model: ObjModel, viewMatrix: Matrix, modelViewMatrix: Matrix, lightDir: Vector3, projectionMatrix: Matrix) {
         super();
         this.model = model;
+        this.viewMatrix = viewMatrix;
         this.modelViewMatrix = modelViewMatrix;
         this.projectionMatrix = projectionMatrix;
-        this.lightDirection = modelViewMatrix
+        this.lightDirection = viewMatrix
             .multiplyVector4(new Vector4(lightDir.x, lightDir.y, lightDir.z, 0.0))
             .normalize();
 
@@ -42,7 +44,7 @@ export class PhongShader extends Shader {
     vertex(iface: number, jvert: number) {
         // Normal
         const normal = this.model.getNormal(iface, jvert).normalize();
-        const vec4Normal = new Vector4(normal.x, normal.y, normal.z, 0.0);
+        const vec4Normal = new Vector4(normal.x, normal.y, normal.z, 1.0);
 
         // Position
         const vert = this.model.getVert(iface, jvert);

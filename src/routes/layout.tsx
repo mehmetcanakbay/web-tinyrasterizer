@@ -5,7 +5,7 @@ import ModelContext from "~/context/file-context";
 import { routeLoader$ } from "@builder.io/qwik-city";
 
 export const useTextLoader = routeLoader$(async () => {
-    const res = await fetch('https://raw.githubusercontent.com/alecjacobson/common-3d-test-models/master/data/stanford-bunny.obj');
+    const res = await fetch('https://raw.githubusercontent.com/alecjacobson/common-3d-test-models/refs/heads/master/data/stanford-bunny.obj');
     const text = await res.text();
     return text;
 });
